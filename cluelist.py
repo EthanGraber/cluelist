@@ -66,7 +66,10 @@ def turn():
 			not_owned[character_input] = players_who_dont_have
 			not_owned[weapon_input] = players_who_dont_have
 			not_owned[room_input] = players_who_dont_have
-
+			
+			possibly_owned[character_input].append(disproven_input)
+			possibly_owned[weapon_input].append(disproven_input)
+			possibly_owned[room_input].append(disproven_input)
 		elif user_input == 'end':
 			are_you_sure = input("Are you sure? y/n: ")
 			if are_you_sure == 'y' or 'yes':
