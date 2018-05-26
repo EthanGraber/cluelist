@@ -63,9 +63,9 @@ def turn():
 			
 			players_who_dont_have = disproven_solver(guesser_input, disproven_input)
 
-			not_owned[character_input] = players_who_dont_have
-			not_owned[weapon_input] = players_who_dont_have
-			not_owned[room_input] = players_who_dont_have
+			not_owned[character_input].append(players_who_dont_have)
+			not_owned[weapon_input].append(players_who_dont_have)
+			not_owned[room_input].append(players_who_dont_have)
 			
 			possibly_owned[character_input].append(disproven_input)
 			possibly_owned[weapon_input].append(disproven_input)
