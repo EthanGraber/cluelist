@@ -37,8 +37,19 @@ def disproven_solver(guesser, disprover):
 	elif index_guesser > index_disprover:
 		do_not_have = players[index_guesser+1:] + players[:index_disprover]
 		return do_not_have
+	elif index_guesser == index_disprover:
+		temp_player_list = players
+		do_not_have = del temp_player_list[index_guesser]
 	else:
 		print("This message should never appear")
+def data_cleaner():
+	for key in not_owned:
+		new_list = []
+		for i in not_owned[key]:
+			if i not in new_list:
+				new_list.append(i)
+		not_owned[key] = new_list
+	#not currently cleaning possibly owned, as more data in possibly owned probably correlates to higher chance of containing said card.
 def turn():
 	game_on = True
 	while game_on:
@@ -63,18 +74,30 @@ def turn():
 			
 			players_who_dont_have = disproven_solver(guesser_input, disproven_input)
 
-			not_owned[character_input].append(players_who_dont_have)
-			not_owned[weapon_input].append(players_who_dont_have)
-			not_owned[room_input].append(players_who_dont_have)
-			
-			possibly_owned[character_input].append(disproven_input)
-			possibly_owned[weapon_input].append(disproven_input)
-			possibly_owned[room_input].append(disproven_input)
+			not_owned[character_input].extend(players_who_dont_have)
+			not_owned[weapon_input].extend(players_who_dont_have)
+			not_owned[room_input].extend(players_who_dont_have)
+
+			possibly_owned[character_input].extend(disproven_input)
+			possibly_owned[weapon_input].extend(disproven_input)
+			possibly_owned[room_input].extend(disproven_input)
+
+			data_cleaner()
 		elif user_input == 'end':
 			are_you_sure = input("Are you sure? y/n: ")
 			if are_you_sure == 'y' or 'yes':
 				game_on = False
 			else:
 				pass
-
+		elif user_input == 'viewdata':
+			view_which_data = input("Which data?: ")
+			if view_which_data == 'cards':
+				print(all_cards)
+			elif view_which_data == 'notowned':
+				print(not_owned)
+			elif view_which_data == 'possiblyowned':
+				print(possibly_owned)
+			elif view_which_data == 'guesses':
+				for guess in guesses:
+					print(guess)
 turn()
