@@ -7,8 +7,17 @@ num_cards = input("How many cards: ")
 cards = []
 guesses = []
 players = []
+characters = ['mustard', 'plum', 'green', 'peacock', 'scarlet', 'white']
+weapons = ['knife', 'candlestick', 'pistol', 'poison', 'trophy', 'rope', 'bat', 'ax', 'dumbbell']
+rooms = ['hall', 'dining room', 'kitchen', 'patio', 'observatory', 'theater', 'living room', 'spa', 'guest house']
 
-all_cards = {'mustard':0, 'plum':0, 'green':0, 'peacock':0, 'scarlet':0, 'white':0, 'knife':0, 'candlestick':0, 'pistol':0, 'poison':0, 'trophy':0, 'rope':0, 'bat':0, 'ax':0, 'dumbbell':0, 'hall':0, 'dining room':0, 'kitchen':0, 'patio':0, 'observatory':0, 'theater':0, 'living room':0, 'spa':0, 'guest house':0}
+#all_cards = {'mustard':0, 'plum':0, 'green':0, 'peacock':0, 'scarlet':0, 'white':0, 'knife':0, 'candlestick':0, 'pistol':0, 'poison':0, 'trophy':0, 'rope':0, 'bat':0, 'ax':0, 'dumbbell':0, 'hall':0, 'dining room':0, 'kitchen':0, 'patio':0, 'observatory':0, 'theater':0, 'living room':0, 'spa':0, 'guest house':0}
+
+character_cards = {'mustard':0, 'plum':0, 'green':0, 'peacock':0, 'scarlet':0, 'white':0}
+
+weapon_cards = {'knife':0, 'candlestick':0, 'pistol':0, 'poison':0, 'trophy':0, 'rope':0, 'bat':0, 'ax':0, 'dumbbell':0}
+
+room_cards = {'hall':0, 'dining room':0, 'kitchen':0, 'patio':0, 'observatory':0, 'theater':0, 'living room':0, 'spa':0, 'guest house':0}
 
 not_owned = {'mustard':[], 'plum':[], 'green':[], 'peacock':[], 'scarlet':[], 'white':[], 'knife':[], 'candlestick':[], 'pistol':[], 'poison':[], 'trophy':[], 'rope':[], 'bat':[], 'ax':[], 'dumbbell':[], 'hall':[], 'dining room':[], 'kitchen':[], 'patio':[], 'observatory':[], 'theater':[], 'living room':[], 'spa':[], 'guest house':[]}
 
@@ -23,7 +32,12 @@ print(cards)
 
 #Program assigns the cards to be held by 'E'. This is the equivalent of marking down that you own the cards in your hand on the clue sheet. Currently hardcoded to auto assign them to *me* specifically, although this can be changed later and I don't think anyone else is going to use this.
 for card in cards:
-	all_cards[card] = 'E'
+	if card in characters:
+		character_cards[card] = 'E'
+	elif card in weapons:
+		weapon_cards[card] = 'E'
+	elif card in rooms:
+		room_cards[card] = 'E'
 
 #Gives program the order and names of the other players. The order that the players are entered in determines play order.
 for i in range(int(num_players)):
@@ -80,18 +94,43 @@ def guess_string_cleaner(guesser, character, weapon, room, disprover):
 
 #Because the cluesheet is also a mess if not printed properly
 def cluesheet():
-	for item in sorted(all_cards):
+	for item in sorted(character_cards):
 		print('-----------------------')
 		edited_item = item
 		if len(edited_item) < 11:
 			spaces = 11 - len(edited_item)
 			for i in range(0, spaces):
 				edited_item = edited_item + ' '
-		if all_cards[item] == 0:
+		if character_cards[item] == 0:
 			print('| ' + edited_item + ' |   |   |')
 		else:
-			print('| ' + edited_item + ' | X | ' + all_cards[item] + ' |')
+			print('| ' + edited_item + ' | X | ' + character_cards[item] + ' |')
 	print('-----------------------')
+	for item in sorted(weapon_cards):
+		print('-----------------------')
+		edited_item = item
+		if len(edited_item) < 11:
+			spaces = 11 - len(edited_item)
+			for i in range(0, spaces):
+				edited_item = edited_item + ' '
+		if weapon_cards[item] == 0:
+			print('| ' + edited_item + ' |   |   |')
+		else:
+			print('| ' + edited_item + ' | X | ' + weapon_cards[item] + ' |')
+	print('-----------------------')
+	for item in sorted(room_cards):
+		print('-----------------------')
+		edited_item = item
+		if len(edited_item) < 11:
+			spaces = 11 - len(edited_item)
+			for i in range(0, spaces):
+				edited_item = edited_item + ' '
+		if room_cards[item] == 0:
+			print('| ' + edited_item + ' |   |   |')
+		else:
+			print('| ' + edited_item + ' | X | ' + room_cards[item] + ' |')
+	print('-----------------------')
+
 #The heart of the program. 
 def turn():
 	game_on = True
@@ -100,11 +139,21 @@ def turn():
 		if user_input == 'addknown':
 			add_known_card_input = input("which card: ")
 			add_known_person_input = input("which person, put self if pool / etc: ")
-			all_cards[add_known_card_input] = add_known_person_input
+			if add_known_card_input in characters:
+				character_cards[add_known_card_input] = add_known_person_input
+			elif add_known_card_input in weapons:
+				weapon_cards[add_known_card_input] = add_known_person_input
+			elif add_known_card_input in rooms:
+				room_cards[add_known_card_input] = add_known_person_input
 		elif user_input == 'edit':
 			edit_input_card = input("Which entry would you like to edit: ")
 			edit_input_person = input("What do you want the entry to say, 0 for reset: ")
-			all_cards[edit_input_card] = edit_input_person
+			if edit_input_card in characters:
+				character_cards[edit_input_card] = edit_input_person
+			elif edit_input_card in weapons:
+				weapon_cards[edit_input_card] = edit_input_person
+			elif edit_input_card in rooms:
+				room_cards[edit_input_card] = edit_input_person
 		elif user_input == 'guess':
 			guesser_input = input("Which player is guessing: ")
 			character_input = input("Character: ")
@@ -135,7 +184,9 @@ def turn():
 		elif user_input == 'viewdata':
 			view_which_data = input("Which data?: ")
 			if view_which_data == 'cards':
-				print(all_cards)
+				print(character_cards)
+				print(weapon_cards)
+				print(room_cards)
 			elif view_which_data == 'notowned':
 				print(not_owned)
 			elif view_which_data == 'possiblyowned':
