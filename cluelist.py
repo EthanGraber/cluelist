@@ -1,5 +1,9 @@
+import os
+#Give program information on the general setting of the game
 num_players = input("How many players: ")
 num_cards = input("How many cards: ")
+
+#Declares all the lists and dictionaries needed to keep track of the information. This is essentially the programmed version of the clue sheet and the cards held within your hands. 
 cards = []
 guesses = []
 players = []
@@ -10,21 +14,25 @@ not_owned = {'mustard':[], 'plum':[], 'green':[], 'peacock':[], 'scarlet':[], 'w
 
 possibly_owned = {'mustard':[], 'plum':[], 'green':[], 'peacock':[], 'scarlet':[], 'white':[], 'knife':[], 'candlestick':[], 'pistol':[], 'poison':[], 'trophy':[], 'rope':[], 'bat':[], 'ax':[], 'dumbbell':[], 'hall':[], 'dining room':[], 'kitchen':[], 'patio':[], 'observatory':[], 'theater':[], 'living room':[], 'spa':[], 'guest house':[]}
 
+#Program prompts for cards held in hands.
 for i in range(int(num_cards)):
 	entercards = input("Enter card name: ")
 	cards.append(entercards)
 
 print(cards)
 
+#Program assigns the cards to be held by 'E'. This is the equivalent of marking down that you own the cards in your hand on the clue sheet. Currently hardcoded to auto assign them to *me* specifically, although this can be changed later and I don't think anyone else is going to use this.
 for card in cards:
 	all_cards[card] = 'E'
 
+#Gives program the order and names of the other players. The order that the players are entered in determines play order.
 for i in range(int(num_players)):
 	player_names = input("Enter player names in order (1 char): ")
 	players.append(player_names)
 	
 print(players)
 
+#Called by the turn() function. Used to determine who couldn't respond to the accusation and markes them down as not having the cards used in the accusation. 
 def disproven_solver(guesser, disprover):
 	index_guesser = players.index(guesser)
 	index_disprover = players.index(disprover)
@@ -39,9 +47,12 @@ def disproven_solver(guesser, disprover):
 		return do_not_have
 	elif index_guesser == index_disprover:
 		temp_player_list = players
-		do_not_have = del temp_player_list[index_guesser]
+		del temp_player_list[index_guesser]
+		do_not_have = temp_player_list
 	else:
 		print("This message should never appear")
+
+#"Cleans" the data. This solves the problem of accidentally having someone listed multiple times as not having a card.
 def data_cleaner():
 	for key in not_owned:
 		new_list = []
@@ -50,6 +61,38 @@ def data_cleaner():
 				new_list.append(i)
 		not_owned[key] = new_list
 	#not currently cleaning possibly owned, as more data in possibly owned probably correlates to higher chance of containing said card.
+
+#Because the guess strings are a mess unless printed properly
+def guess_string_cleaner(guesser, character, weapon, room, disprover):
+	if len(character) < 7:
+		spaces = 7 - len(character)
+		for i in range(0, spaces):
+			character = character + ' '
+	if len(weapon) < 11:
+		spaces = 11 - len(weapon)
+		for i in range(0, spaces):
+			weapon = weapon + ' '
+	if len(room) < 11:
+		spaces = 11 - len(room)
+		for i in range(0, spaces):
+			room = room + ' '
+	guess = '|Guesser: ' + guesser + ' |Character: ' + character + ' |Weapon: ' + weapon + ' | Disprover: ' + disprover + ' |'
+
+#Because the cluesheet is also a mess if not printed properly
+def cluesheet():
+	for item in sorted(all_cards):
+		print('-----------------------')
+		edited_item = item
+		if len(edited_item) < 11:
+			spaces = 11 - len(edited_item)
+			for i in range(0, spaces):
+				edited_item = edited_item + ' '
+		if all_cards[item] == 0:
+			print('| ' + edited_item + ' |   |   |')
+		else:
+			print('| ' + edited_item + ' | X | ' + all_cards[item] + ' |')
+	print('-----------------------')
+#The heart of the program. 
 def turn():
 	game_on = True
 	while game_on:
@@ -69,14 +112,14 @@ def turn():
 			room_input = input("Room: ")
 			disproven_input = input("Disproven by (type c before name if ended via card / etc): ")
 
-			guess_string = "|Guesser: " + guesser_input + " |Character: " + character_input + " |Weapon: " + weapon_input + " |Room: " + room_input + " |Disproven: " + disproven_input
+			guess_string = guess_string_cleaner(guesser_input, character_input, weapon_input, room_input, disproven_input)
 			guesses.append(guess_string)
 			
 			players_who_dont_have = disproven_solver(guesser_input, disproven_input)
-
-			not_owned[character_input].extend(players_who_dont_have)
-			not_owned[weapon_input].extend(players_who_dont_have)
-			not_owned[room_input].extend(players_who_dont_have)
+			if not players_who_dont_have == None:
+				not_owned[character_input].extend(players_who_dont_have)
+				not_owned[weapon_input].extend(players_who_dont_have)
+				not_owned[room_input].extend(players_who_dont_have)
 
 			possibly_owned[character_input].extend(disproven_input)
 			possibly_owned[weapon_input].extend(disproven_input)
@@ -100,4 +143,8 @@ def turn():
 			elif view_which_data == 'guesses':
 				for guess in guesses:
 					print(guess)
+		elif user_input == 'clear':
+			os.system('clear')
+		elif user_input == 'cluesheet':
+			cluesheet()
 turn()
