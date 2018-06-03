@@ -7,11 +7,10 @@ num_cards = input("How many cards: ")
 cards = []
 guesses = []
 players = []
+
 characters = ['mustard', 'plum', 'green', 'peacock', 'scarlet', 'white']
 weapons = ['knife', 'candlestick', 'pistol', 'poison', 'trophy', 'rope', 'bat', 'ax', 'dumbbell']
 rooms = ['hall', 'dining room', 'kitchen', 'patio', 'observatory', 'theater', 'living room', 'spa', 'guest house']
-
-#all_cards = {'mustard':0, 'plum':0, 'green':0, 'peacock':0, 'scarlet':0, 'white':0, 'knife':0, 'candlestick':0, 'pistol':0, 'poison':0, 'trophy':0, 'rope':0, 'bat':0, 'ax':0, 'dumbbell':0, 'hall':0, 'dining room':0, 'kitchen':0, 'patio':0, 'observatory':0, 'theater':0, 'living room':0, 'spa':0, 'guest house':0}
 
 character_cards = {'mustard':0, 'plum':0, 'green':0, 'peacock':0, 'scarlet':0, 'white':0}
 
@@ -90,10 +89,12 @@ def guess_string_cleaner(guesser, character, weapon, room, disprover):
 		spaces = 11 - len(room)
 		for i in range(0, spaces):
 			room = room + ' '
-	guess = '|Guesser: ' + guesser + ' |Character: ' + character + ' |Weapon: ' + weapon + ' | Disprover: ' + disprover + ' |'
-
+	guess = '|Guesser: ' + guesser + ' |Character: ' + character + ' |Weapon: ' + weapon + ' |Room: ' + room + ' | Disprover: ' + disprover + ' |'
+	return guess
 #Because the cluesheet is also a mess if not printed properly
 def cluesheet():
+	print('-----------------------')
+	print('|Characters:          |')
 	for item in sorted(character_cards):
 		print('-----------------------')
 		edited_item = item
@@ -106,6 +107,7 @@ def cluesheet():
 		else:
 			print('| ' + edited_item + ' | X | ' + character_cards[item] + ' |')
 	print('-----------------------')
+	print('|Weapons:             |')
 	for item in sorted(weapon_cards):
 		print('-----------------------')
 		edited_item = item
@@ -118,6 +120,7 @@ def cluesheet():
 		else:
 			print('| ' + edited_item + ' | X | ' + weapon_cards[item] + ' |')
 	print('-----------------------')
+	print('|Rooms:               |')
 	for item in sorted(room_cards):
 		print('-----------------------')
 		edited_item = item
