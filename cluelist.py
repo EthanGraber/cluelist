@@ -134,6 +134,32 @@ def cluesheet():
 			print('| ' + edited_item + ' | X | ' + room_cards[item] + ' |')
 	print('-----------------------')
 
+#If turn() is the heart of the program, then this thing is the brain. Turns the data collected into meaningful expressions in terms of who has what cards, where they are, and what cards are in the middle.
+def data_analyzer():
+	room_unknown_counter = 9
+	total_known_counter = 0
+	for room in room_cards:
+		if room_cards[room] != 0:
+			room_unknown_counter = room_unknown_counter - 1
+		if room_unknown_counter == 1:
+			total_known_counter = total_known_counter + 1
+			print("Chosen room: " + room)
+	weapon_unknown_counter = 9
+	for weapon in weapon_cards:
+		if weapon_cards[weapon] != 0:
+			weapon_unknown_counter = weapon_unknown_counter - 1
+		if weapon_unknown_counter == 1:
+			total_known_counter = total_known_counter + 1
+			print("Chosen weapon: " + weapon)
+	character_unknown_counter = 6
+	for character in character_cards:
+		if character_cards[character] != 0:
+			character_unknown_counter = character_unknown_counter - 1
+		if character_unknown_counter == 1:
+			total_known_counter = total_known_counter + 1
+			print("Chosen character: " + character)
+	if total_known_counter == 3:
+		print("The character, weapon, and room are all known. The game is finished.")
 #The heart of the program. 
 def turn():
 	game_on = True
@@ -148,6 +174,7 @@ def turn():
 				weapon_cards[add_known_card_input] = add_known_person_input
 			elif add_known_card_input in rooms:
 				room_cards[add_known_card_input] = add_known_person_input
+			data_analyzer()
 		elif user_input == 'edit':
 			edit_input_card = input("Which entry would you like to edit: ")
 			edit_input_person = input("What do you want the entry to say, 0 for reset: ")
@@ -178,6 +205,7 @@ def turn():
 			possibly_owned[room_input].extend(disproven_input)
 
 			data_cleaner()
+			data_analyzer()
 		elif user_input == 'end':
 			are_you_sure = input("Are you sure? y/n: ")
 			if are_you_sure == 'y' or 'yes':
