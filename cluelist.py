@@ -8,6 +8,8 @@ cards = []
 guesses = []
 players = []
 
+raw_guesses = {}
+
 characters = ['mustard', 'plum', 'green', 'peacock', 'scarlet', 'white']
 weapons = ['knife', 'candlestick', 'pistol', 'poison', 'trophy', 'rope', 'bat', 'ax', 'dumbbell']
 rooms = ['hall', 'dining room', 'kitchen', 'patio', 'observatory', 'theater', 'living room', 'spa', 'guest house']
@@ -163,6 +165,7 @@ def data_analyzer():
 #The heart of the program. 
 def turn():
 	game_on = True
+	total_guesses = 0
 	while game_on:
 		user_input = input("Perform an action: ")
 		if user_input == 'addknown':
@@ -185,6 +188,7 @@ def turn():
 			elif edit_input_card in rooms:
 				room_cards[edit_input_card] = edit_input_person
 		elif user_input == 'guess':
+			total_guesses = total_guesses + 1
 			guesser_input = input("Which player is guessing: ")
 			character_input = input("Character: ")
 			weapon_input = input("Weapon: ")
@@ -193,6 +197,9 @@ def turn():
 
 			guess_string = guess_string_cleaner(guesser_input, character_input, weapon_input, room_input, disproven_input)
 			guesses.append(guess_string)
+
+			raw_guess_string = "guess" + str(total_guesses)
+			raw_guesses[raw_guess_string] = [guesser_input, character_input, weapon_input, room_input, disproven_input]
 			
 			players_who_dont_have = disproven_solver(guesser_input, disproven_input)
 			if not players_who_dont_have == None:
@@ -225,6 +232,9 @@ def turn():
 			elif view_which_data == 'guesses':
 				for guess in guesses:
 					print(guess)
+			elif view_which_data == 'rawguesses':
+				for guess in raw_guesses:
+					print(raw_guesses[guess])
 		elif user_input == 'clear':
 			os.system('clear')
 		elif user_input == 'cluesheet':
