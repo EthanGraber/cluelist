@@ -75,7 +75,9 @@ def data_cleaner():
 			if i not in new_list:
 				new_list.append(i)
 		not_owned[key] = new_list
-	#not currently cleaning possibly owned, as more data in possibly owned probably correlates to higher chance of containing said card.
+	#not currently cleaning possibly_owned, as more data in possibly_owned probably correlates to higher chance of containing said card.
+	
+	#TODO prevent possibly_owned and not_owned from having contrary data (remove not_owned entries from possibly_owned)
 
 #Because the guess strings are a mess unless printed properly
 def guess_string_cleaner(guesser, character, weapon, room, disprover):
@@ -162,6 +164,44 @@ def data_analyzer():
 			print("Chosen character: " + character)
 	if total_known_counter == 3:
 		print("The character, weapon, and room are all known. The game is finished.")
+
+#Separated from data_analyzer() for clarity. 
+def not_owned_analyzer():
+	not_owned_counter = 0
+	character_check = False
+	weapon_check = False
+	room_check = False
+	for guess in raw_guesses:
+		if guess[4] in not_owned[guess[1]]
+			not_owned_counter = not_owned_counter + 1
+			character_check = True
+		if guess[4] in not_owned[guess[2]]
+			not_owned_counter = not_owned_counter + 1
+			weapon_check = True
+		if guess[4] in not_owned[guess[3]]
+			not_owned_counter = not_owned_counter + 1
+			room_check = True
+		if not_owned_counter == 1:
+			if character_check == True:
+				possibly_owned[guess[2]].extend(guess[4])
+				possibly_owned[guess[3]].extend(guess[4])
+			elif weapon_check == True:
+				possibly_owned[guess[1]].extend(guess[4])
+				possibly_owned[guess[3]].extend(guess[4])
+			elif room_check == True:
+				possibly_owned[guess[1]].extend(guess[4])
+				possibly_owned[guess[2]].extend(guess[4])
+		elif not_owned_counter == 2:
+			if character_check == False:
+				character_cards[guess[1]] = guess[4]
+			elif weapon_check == False:
+				weapon_cards[guess[1]] = guess[4]
+			elif room_check == False:
+				room_cards[guess[1]] = guess[4]
+		elif not_owned_counter == 3:
+			print("THIS MESSAGE SHOULD NEVER APPEAR")
+	#TODO check if this works
+
 #The heart of the program. 
 def turn():
 	game_on = True
