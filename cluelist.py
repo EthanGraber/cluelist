@@ -1,3 +1,5 @@
+#TODO allow more room for input errors throughout the entire program (prevent crashes, allowed editing of guesses, etc)
+
 import os
 #Give program information on the general setting of the game
 num_players = input("How many players: ")
@@ -76,6 +78,8 @@ def data_cleaner():
 				new_list.append(i)
 		not_owned[key] = new_list
 	#not currently cleaning possibly_owned, as more data in possibly_owned probably correlates to higher chance of containing said card.
+
+	#TODO organize the values of possibly_owned so that they are in alphabetical order or something which will allow easier reading instead of having them organized in the order they were appended
 	
 	#TODO prevent possibly_owned and not_owned from having contrary data (remove not_owned entries from possibly_owned)
 
@@ -237,7 +241,7 @@ def turn():
 			weapon_input = input("Weapon: ")
 			room_input = input("Room: ")
 			disproven_input = input("Disproven by (type c before name if ended via card / etc): ")
-
+			#TODO actually implement the 'c before name' thing so that it doesn't throw a ValueError and break the program >.>
 			guess_string = guess_string_cleaner(guesser_input, character_input, weapon_input, room_input, disproven_input)
 			guesses.append(guess_string)
 
@@ -269,18 +273,20 @@ def turn():
 				print(character_cards)
 				print(weapon_cards)
 				print(room_cards)
-			elif view_which_data == 'notowned':
-				print(not_owned)
-			elif view_which_data == 'possiblyowned':
-				print(possibly_owned)
 			elif view_which_data == 'guesses':
 				for guess in guesses:
 					print(guess)
 			elif view_which_data == 'rawguesses':
 				for guess in raw_guesses:
 					print(raw_guesses[guess])
+		elif user_input == 'notowned':
+			print(not_owned)
+			#TODO maybe make notowned more clear when it prints, don't display the notowned for the cards that are already known, this is related to the improved cleaning todo
+		elif user_input == 'possiblyowned':
+			print(possibly_owned)
 		elif user_input == 'clear':
 			os.system('clear')
 		elif user_input == 'cluesheet':
 			cluesheet()
+		#TODO add a 'help' option because I forget the names of the commands
 turn()
