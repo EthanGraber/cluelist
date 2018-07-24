@@ -171,36 +171,39 @@ def not_owned_analyzer():
 	character_check = False
 	weapon_check = False
 	room_check = False
-	for guess in raw_guesses:
-		if guess[4] in not_owned[guess[1]]
+	for not_owned_guess in raw_guesses:
+		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][1]]:
 			not_owned_counter = not_owned_counter + 1
 			character_check = True
-		if guess[4] in not_owned[guess[2]]
+		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][2]]:
 			not_owned_counter = not_owned_counter + 1
 			weapon_check = True
-		if guess[4] in not_owned[guess[3]]
+		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][3]]:
 			not_owned_counter = not_owned_counter + 1
 			room_check = True
 		if not_owned_counter == 1:
 			if character_check == True:
-				possibly_owned[guess[2]].extend(guess[4])
-				possibly_owned[guess[3]].extend(guess[4])
+				possibly_owned[raw_guesses[not_owned_guess][2]].extend(raw_guesses[not_owned_guess][4])
+				possibly_owned[raw_guesses[not_owned_guess][3]].extend(raw_guesses[not_owned_guess][4])
 			elif weapon_check == True:
-				possibly_owned[guess[1]].extend(guess[4])
-				possibly_owned[guess[3]].extend(guess[4])
+				possibly_owned[raw_guesses[not_owned_guess][1]].extend(raw_guesses[not_owned_guess][4])
+				possibly_owned[raw_guesses[not_owned_guess][3]].extend(raw_guesses[not_owned_guess][4])
 			elif room_check == True:
-				possibly_owned[guess[1]].extend(guess[4])
-				possibly_owned[guess[2]].extend(guess[4])
+				possibly_owned[raw_guesses[not_owned_guess][1]].extend(raw_guesses[not_owned_guess][4])
+				possibly_owned[raw_guesses[not_owned_guess][2]].extend(raw_guesses[not_owned_guess][4])
 		elif not_owned_counter == 2:
 			if character_check == False:
-				character_cards[guess[1]] = guess[4]
+				character_cards[raw_guesses[not_owned_guess][1]] = raw_guesses[not_owned_guess][4]
 			elif weapon_check == False:
-				weapon_cards[guess[1]] = guess[4]
+				weapon_cards[raw_guesses[not_owned_guess][2]] = raw_guesses[not_owned_guess][4]
 			elif room_check == False:
-				room_cards[guess[1]] = guess[4]
+				room_cards[raw_guesses[not_owned_guess][3]] = raw_guesses[not_owned_guess][4]
 		elif not_owned_counter == 3:
 			print("THIS MESSAGE SHOULD NEVER APPEAR")
-	#TODO check if this works
+		not_owned_counter = 0
+		character_check = False
+		weapon_check = False
+		room_check = False
 
 #The heart of the program. 
 def turn():
@@ -252,6 +255,7 @@ def turn():
 			possibly_owned[room_input].extend(disproven_input)
 
 			data_cleaner()
+			not_owned_analyzer()
 			data_analyzer()
 		elif user_input == 'end':
 			are_you_sure = input("Are you sure? y/n: ")
