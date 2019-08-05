@@ -288,7 +288,7 @@ def turn():
 			else:
 				pass
 		elif user_input == 'viewdata':
-			view_which_data = input("Which data?: ")
+			view_which_data = input("Which data? (guesses, cards, rawguesses): ")
 			if view_which_data == 'cards':
 				print(character_cards)
 				print(weapon_cards)
@@ -310,16 +310,16 @@ def turn():
 			cluesheet()
 		elif user_input == 'help':
 			print('#################################################################')
-			print('# Command       | Usage					       #')
+			print('# Command       | Usage                                         #')
 			print('# addknown      | Adds a known card (i.e. seen through a guess) #')
 			print('# edit          | Allows editing of currently known cards       #')
-			print('# guess         | Input a guess				       #')
-			print('# end           | Ends the game				       #')
+			print('# guess         | Input a guess                                 #')
+			print('# end           | Ends the game                                 #')
 			print('# viewdata      | Displays some data in a human readable format #')
-			print('# notowned      | Prints not_owned			       #')
-			print('# possiblyowned | Prints possibly_owned			       #')
-			print('# clear	       | Clears the console window		       #')
-			print('# cluesheet     | Prints the "cluesheet"			       #')
-			print('# help 	       | Displays this menu			       #')
+			print('# notowned      | Prints not_owned                              #')
+			print('# possiblyowned | Prints possibly_owned                         #')
+			print('# clear         | Clears the console window                     #')
+			print('# cluesheet     | Prints the "cluesheet"                        #')
+			print('# help          | Displays this menu                            #')
 			print('#################################################################')
 turn()
