@@ -142,7 +142,7 @@ def cluesheet():
 			print('| ' + edited_item + ' | X | ' + room_cards[item] + ' |')
 	print('-----------------------')
 
-#If turn() is the heart of the program, then this thing is the brain. Turns the data collected into meaningful expressions in terms of who has what cards, where they are, and what cards are in the middle.
+#Turns collected data into meaningful expressions in terms of who has what cards, where they are, and what cards are in the middle envelope.
 def data_analyzer():
 	room_unknown_counter = 9
 	total_known_counter = 0
@@ -175,18 +175,27 @@ def not_owned_analyzer():
 	character_check = False
 	weapon_check = False
 	room_check = False
+
+	#Iterates through the keys in raw_guesses
 	for not_owned_guess in raw_guesses:
+		#The [4] is the index of the disprover, [1-3] are character, weapon, and room.
+		#i.e. checks if the disprover for each guess is known to not have one of the cards they theoretically could have used to disprove the statement.
+		#First if is for character, second if is for weapon, third if is for room
 		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][1]]:
 			not_owned_counter = not_owned_counter + 1
-			character_check = True
+			character_check = True 
 		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][2]]:
 			not_owned_counter = not_owned_counter + 1
-			weapon_check = True
+			weapon_check = True 
 		if raw_guesses[not_owned_guess][4] in not_owned[raw_guesses[not_owned_guess][3]]:
 			not_owned_counter = not_owned_counter + 1
 			room_check = True
+		
+		#If the disprover doesn't own one of the cards:
 		if not_owned_counter == 1:
+			#If disprover doesn't have character card, then add their name to possibly own for the room and the weapon
 			if character_check == True:
+				#[2] is weapon, [3] is room. Adds [4] (disprover) to appropriate possibly_owned entry. etc. 
 				possibly_owned[raw_guesses[not_owned_guess][2]].extend(raw_guesses[not_owned_guess][4])
 				possibly_owned[raw_guesses[not_owned_guess][3]].extend(raw_guesses[not_owned_guess][4])
 			elif weapon_check == True:
@@ -195,6 +204,8 @@ def not_owned_analyzer():
 			elif room_check == True:
 				possibly_owned[raw_guesses[not_owned_guess][1]].extend(raw_guesses[not_owned_guess][4])
 				possibly_owned[raw_guesses[not_owned_guess][2]].extend(raw_guesses[not_owned_guess][4])
+		
+		#If the disprover is known to not own two of the cards, they're automatically marked down as having the third.
 		elif not_owned_counter == 2:
 			if character_check == False:
 				character_cards[raw_guesses[not_owned_guess][1]] = raw_guesses[not_owned_guess][4]
@@ -202,6 +213,8 @@ def not_owned_analyzer():
 				weapon_cards[raw_guesses[not_owned_guess][2]] = raw_guesses[not_owned_guess][4]
 			elif room_check == False:
 				room_cards[raw_guesses[not_owned_guess][3]] = raw_guesses[not_owned_guess][4]
+		
+		#If this ever appears, then some logic in the program is just broken, because there's no way the disprover should be able to have 0 of the cards and still disprove the statement.
 		elif not_owned_counter == 3:
 			print("THIS MESSAGE SHOULD NEVER APPEAR")
 		not_owned_counter = 0
@@ -226,6 +239,8 @@ def turn():
 				room_cards[add_known_card_input] = add_known_person_input
 			data_analyzer()
 		elif user_input == 'edit':
+			#Only lets you manually edit KNOWN cards, doesn't let you edit guesses yet
+			#TODO allow editing of guesses
 			edit_input_card = input("Which entry would you like to edit: ")
 			edit_input_person = input("What do you want the entry to say, 0 for reset: ")
 			if edit_input_card in characters:
@@ -240,25 +255,29 @@ def turn():
 			character_input = input("Character: ")
 			weapon_input = input("Weapon: ")
 			room_input = input("Room: ")
+			#TODO actually implement the 'c before name' thing to prevent ValueError >.>
 			disproven_input = input("Disproven by (type c before name if ended via card / etc): ")
-			#TODO actually implement the 'c before name' thing so that it doesn't throw a ValueError and break the program >.>
-			guess_string = guess_string_cleaner(guesser_input, character_input, weapon_input, room_input, disproven_input)
+			#Turns raw data into a clean string for readable output
+			guess_string = guess_string_cleaner(guesser_input, character_input, weapon_input, room_input, disproven_input) 
 			guesses.append(guess_string)
 
+			#Stores raw guess data for analysis
 			raw_guess_string = "guess" + str(total_guesses)
 			raw_guesses[raw_guess_string] = [guesser_input, character_input, weapon_input, room_input, disproven_input]
 			
+			#Checks to see who couldn't disprove the rumor -> marks down as doesn't have
 			players_who_dont_have = disproven_solver(guesser_input, disproven_input)
 			if not players_who_dont_have == None:
 				not_owned[character_input].extend(players_who_dont_have)
 				not_owned[weapon_input].extend(players_who_dont_have)
 				not_owned[room_input].extend(players_who_dont_have)
 
+			#Lists the disprover as possibly having any of the three cards
 			possibly_owned[character_input].extend(disproven_input)
 			possibly_owned[weapon_input].extend(disproven_input)
 			possibly_owned[room_input].extend(disproven_input)
 
-			data_cleaner()
+			data_cleaner() #Remove duplicates from not_owned
 			not_owned_analyzer()
 			data_analyzer()
 		elif user_input == 'end':
