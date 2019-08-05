@@ -273,13 +273,14 @@ def turn():
 				not_owned[room_input].extend(players_who_dont_have)
 
 			#Lists the disprover as possibly having any of the three cards
+			#TODO doesn't not_owned_analyzer also do this? double check that. 
 			possibly_owned[character_input].extend(disproven_input)
 			possibly_owned[weapon_input].extend(disproven_input)
 			possibly_owned[room_input].extend(disproven_input)
 
 			data_cleaner() #Remove duplicates from not_owned
-			not_owned_analyzer()
-			data_analyzer()
+			not_owned_analyzer() #Checks disprover against not_owned to see if we can determine which card was used to disprove the statement
+			data_analyzer() #Checks for win condition
 		elif user_input == 'end':
 			are_you_sure = input("Are you sure? y/n: ")
 			if are_you_sure == 'y' or 'yes':
@@ -307,5 +308,18 @@ def turn():
 			os.system('clear')
 		elif user_input == 'cluesheet':
 			cluesheet()
-		#TODO add a 'help' option because I forget the names of the commands
+		elif user_input == 'help':
+			print('#################################################################')
+			print('# Command       | Usage					       #')
+			print('# addknown      | Adds a known card (i.e. seen through a guess) #')
+			print('# edit          | Allows editing of currently known cards       #')
+			print('# guess         | Input a guess				       #')
+			print('# end           | Ends the game				       #')
+			print('# viewdata      | Displays some data in a human readable format #')
+			print('# notowned      | Prints not_owned			       #')
+			print('# possiblyowned | Prints possibly_owned			       #')
+			print('# clear	       | Clears the console window		       #')
+			print('# cluesheet     | Prints the "cluesheet"			       #')
+			print('# help 	       | Displays this menu			       #')
+			print('#################################################################')
 turn()
