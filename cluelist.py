@@ -75,13 +75,27 @@ def data_cleaner():
 		new_list = []
 		for i in not_owned[key]:
 			if i not in new_list:
-				new_list.append(i)
+				new_list.append(i) #creates a new list and only adds unique values
 		not_owned[key] = new_list
-	#not currently cleaning possibly_owned, as more data in possibly_owned probably correlates to higher chance of containing said card.
 
-	#TODO organize the values of possibly_owned so that they are in alphabetical order or something which will allow easier reading instead of having them organized in the order they were appended
-	
-	#TODO prevent possibly_owned and not_owned from having contrary data (remove not_owned entries from possibly_owned)
+	for key in possibly_owned:
+		possibly_owned[key] = possibly_owned[key].sort()
+		#Sorts entries in possibly_owned to be alphabetical
+
+	for key in possibly_owned:
+		#If an item is in both not_owned and possibly_owned, remove it. Keeps doing this until all items are removed from all entries.
+		for item in not_owned[key]:
+			if item in possibly_owned[key]:
+				value_exists_checker = True
+				while value_exists_checker:
+					possibly_owned[key].remove(item)
+					if item in possibly_owned[key]:
+						pass
+					else:
+						value_exists_checker = False
+			else:
+				pass
+	#not currently cleaning possibly_owned, as more data in possibly_owned probably correlates to higher chance of containing said card.
 
 #Because the guess strings are a mess unless printed properly
 def guess_string_cleaner(guesser, character, weapon, room, disprover):
